@@ -1,0 +1,23 @@
+{
+  "name": "adespresso/white-label-bundle",
+  "description": "Symfony2 bundle to manage whitelabel",
+  "license": "Apache-2.0",
+  "type": "symfony-bundle",
+  "authors": [
+    {
+      "name": "Carlo Forghieri",
+      "email": "carlo@adespresso.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Ae\\WhiteLabelBundle\\": ""
+    }
+  },
+  "require": {
+    "friendsofsymfony/user-bundle": "~1.3",
+    "symfony/framework-bundle": "^2.8",
+    "symfony/twig-bundle": "^2.8",
+    "monolog/monolog": "^1.19"
+  }
+}

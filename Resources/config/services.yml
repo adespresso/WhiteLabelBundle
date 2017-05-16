@@ -1,0 +1,20 @@
+services:
+    ae_whitelabel.service.whitelabel:
+        class: Ae\WhiteLabelBundle\Service\WhiteLabel
+        arguments:
+            - '@service_container'
+            - '@logger'
+
+    ae_whitelabel.twig.extension.whitelabel:
+        class: Ae\WhiteLabelBundle\Twig\Extension\WhiteLabelExtension
+        arguments:
+            - '@ae_whitelabel.service.whitelabel'
+        tags:
+            - { name: twig.extension }
+
+    ae_whitelabel.twig.extension.websitelabel:
+        class: Ae\WhiteLabelBundle\Twig\Extension\WebsiteLabelExtension
+        arguments:
+            - '@ae_whitelabel.service.whitelabel'
+        tags:
+            - { name: twig.extension }
