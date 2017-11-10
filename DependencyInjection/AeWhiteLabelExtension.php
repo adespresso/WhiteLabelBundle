@@ -32,7 +32,6 @@ class AeWhiteLabelExtension extends Extension
             $container->setParameter(sprintf('ae_white_label.website.%s.model', $name), $website);
             $websites[$name] = sprintf('ae_white_label.website.%s', $name);
         }
-        ksort($websites);
 
         $default = $config['default_website'];
         if (isset($websites[$default])) {
