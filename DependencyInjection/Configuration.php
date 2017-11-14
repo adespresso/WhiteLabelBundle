@@ -50,6 +50,7 @@ class Configuration implements ConfigurationInterface
                     ->arrayNode('custom_params')
                         ->prototype('variable')->end()
                     ->end()
+                    ->scalarNode('priority')->end()
                 ->end()
             ->end()
         ;
