@@ -3,7 +3,7 @@
 namespace Ae\WhiteLabelBundle\DependencyInjection;
 
 use Ae\WhiteLabelBundle\Exception\DefaultWebsiteNotExistsException;
-use Ae\WhiteLabelBundle\Model\Website;
+use Ae\WhiteLabelBundle\Exception\PriorityValueAlreadyUsedException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
@@ -20,19 +20,26 @@ class AeWhiteLabelExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
         $this->loadConfig($config, $container);
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
     }
 
     public function loadConfig($config, ContainerBuilder $container)
     {
         $websites = [];
+        $priorities = [];
+
         foreach ($config['websites'] as $name => $website) {
             $this->configureWhiteLabel($name, $website, $container);
+            $priority = $website['priority'];
+            $this->checkPriority($priorities, $priority, $name);
+
             $container->setParameter(sprintf('ae_white_label.website.%s.model', $name), $website);
+            $priorities[$priority] = $name;
             $websites[$name] = sprintf('ae_white_label.website.%s', $name);
         }
-        ksort($websites);
+
+        $websites = $this->sortWebsitesByPriorities($websites, $priorities);
 
         $default = $config['default_website'];
         if (isset($websites[$default])) {
@@ -47,6 +54,7 @@ class AeWhiteLabelExtension extends Extension
     {
         $container->setParameter(sprintf('ae_white_label.website.%s.method', $name), $website['method']);
         $container->setParameter(sprintf('ae_white_label.website.%s.label', $name), $website['label']);
+        $container->setParameter(sprintf('ae_white_label.website.%s.priority', $name), $website['priority']);
         if (key_exists('host', $website)) {
             $container->setParameter(sprintf('ae_white_label.website.%s.host', $name), $website['host']);
         }
@@ -60,5 +68,42 @@ class AeWhiteLabelExtension extends Extension
                 $container->setParameter(sprintf('ae_white_label.website.%s.%s', $name, $param), $value);
             }
         }
+    }
+
+    /**
+     * @param array $priorities
+     * @param string $priority
+     *
+     * @param string $name
+     *
+     * @throws PriorityValueAlreadyUsedException
+     */
+    private function checkPriority(array $priorities, $priority, $name)
+    {
+        if (key_exists($priority, $priorities)) {
+            throw new PriorityValueAlreadyUsedException(
+                    $priority,
+                    $name,
+                    $priorities[$priority]
+            );
+        }
+    }
+
+    /**
+     * @param array $websites
+     * @param array $priorities
+     *
+     * @return array
+     */
+    private function sortWebsitesByPriorities(array $websites, array $priorities)
+    {
+        $sortedWebsite = [];
+        ksort($priorities);
+
+        foreach ($priorities as $id) {
+            $sortedWebsite[$id] = $websites[$id];
+        }
+
+        return $sortedWebsite;
     }
 }
