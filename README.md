@@ -40,12 +40,14 @@ This configuration parameters are an example for a website with two different wh
                 method: byHost
                 custom_params:
                     customFoo: bar
+                priority: 1
             bar_site:
                 label: bar labels
                 user_param:
                     key: origin
                     value: bar_website
                 method: byUserParam
+                priority: 2
     
 
 ## Twig
