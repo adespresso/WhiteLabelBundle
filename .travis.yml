@@ -7,8 +7,6 @@ cache:
     - $HOME/.composer/cache/files
 
 php:
-  - 5.5
-  - 5.6
   - 7.0
   - 7.1
   - hhvm
@@ -23,9 +21,6 @@ matrix:
 install:
   - composer require --no-update roave/security-advisories:dev-master
   - composer install -n --no-progress
-
-before_script:
-  - vendor/bin/php-cs-fixer --diff --dry-run -v fix
 
 script:
   - SYMFONY_DEPRECATIONS_HELPER=weak vendor/bin/phpunit -v
