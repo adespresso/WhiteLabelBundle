@@ -5,7 +5,7 @@ namespace Ae\WhiteLabelBundle\Service;
 use Ae\WhiteLabelBundle\Exception\OperatorNotValidException;
 use Ae\WhiteLabelBundle\Exception\WebsiteNotValidException;
 use Ae\WhiteLabelBundle\Model\Website;
-use FOS\UserBundle\Model\UserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
